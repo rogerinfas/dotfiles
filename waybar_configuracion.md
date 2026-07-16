@@ -61,3 +61,43 @@ Si modificamos alguno de estos archivos en el futuro, podemos aplicar los cambio
 ```bash
 killall waybar; ~/.config/waybar/launch.sh
 ```
+
+---
+
+## 3. Iconos de Aplicaciones Abiertas (Centro de la Barra)
+En el centro de la barra se muestran los iconos de las aplicaciones que tienes abiertas en cada escritorio. Esto **no es un módulo de "barra de tareas" (taskbar) tradicional**, sino una función avanzada del propio módulo de escritorios de Hyprland.
+
+**Archivo:** `~/.config/waybar/modules.json` (busca `"hyprland/workspaces"`)
+
+### ¿Cómo funciona?
+Se utiliza la variable `{windows}` en el formato del escritorio, combinada con la función `window-rewrite` de Waybar. Esta función lee la "clase" (class) de la ventana abierta y la reemplaza por un icono específico de una fuente de iconos (como FontAwesome).
+
+```json
+"hyprland/workspaces": {
+    "format": "{id} {windows}", // Muestra el número del escritorio y luego los iconos
+    "format-window-separator": " ", // Separación entre múltiples iconos
+    "window-rewrite-default": "", // Icono por defecto si la app no está en la lista inferior
+    
+    // Diccionario de reemplazo: "class<NombreApp>": "Icono"
+    "window-rewrite": {
+      "class<kitty>": "",
+      "class<Brave-browser>": "",
+      "class<firefox>": "",
+      "class<spotify>": "",
+      "class<code-oss>": "󰨞",
+      "class<discord>": "",
+      "class<thunar>": "󰉋"
+      // ... más aplicaciones
+    }
+}
+```
+
+### ¿Cómo añadir un icono nuevo para una aplicación?
+Si instalas una aplicación nueva y su icono se muestra como el icono por defecto (``):
+1. Abre la aplicación.
+2. Abre una terminal y ejecuta `hyprctl clients`.
+3. Busca tu aplicación en la lista y copia el valor exacto que dice `class:`.
+4. Abre `~/.config/waybar/modules.json`.
+5. Ve a `"window-rewrite"` y añade una nueva línea con ese nombre de clase y el icono que quieras usar (puedes buscar iconos en páginas como [NerdFonts Cheat Sheet](https://www.nerdfonts.com/cheat-sheet)).
+   *Ejemplo:* `"class<tu_app>": "🚀",`
+6. Reinicia Waybar (`killall waybar; ~/.config/waybar/launch.sh`).
